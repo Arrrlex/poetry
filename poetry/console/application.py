@@ -1,3 +1,5 @@
+import sys
+
 from cleo import Application as BaseApplication
 
 from poetry.__version__ import __version__
@@ -37,6 +39,15 @@ class Application(BaseApplication):
 
         for command in self.get_default_commands():
             self.add(command)
+
+        if sys.version_info[:2] < (3, 6):
+            self._preliminary_io.write_line(
+                "\n<fg=yellow>Python <fg=yellow;options=bold>{}</> will no longer be supported "
+                "in the next feature release of Poetry (<fg=yellow;options=bold>1.2</>).\n"
+                "You should consider updating your Python version to a supported one.</>\n".format(
+                    ".".join(str(v) for v in sys.version_info[:2])
+                )
+            )
 
     @property
     def poetry(self):
